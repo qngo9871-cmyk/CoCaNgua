@@ -1,0 +1,238 @@
+# Cờ Cá Ngựa — Vietnamese Horse Race Board Game
+
+Native SwiftUI iOS app for Cờ Cá Ngựa, the traditional Vietnamese 4-player race/dice
+board game (the Vietnamese member of the Ludo/Pachisi family). Bundle
+`com.quyenngo.cocangua`. Built 2026-07-31 as one app in a 5-app Vietnamese-games
+lineup, following the house pattern from `Fanorona` (XcodeGen shape, PurchaseManager) and
+`SamLoc` (Localization, tooling scripts, UpgradeView style). Structurally this app is
+neither Fanorona's 1v1 board game nor SamLoc's 4-AI card game — it's a 4-player token
+race, so the Core/ layer (Board/Token/Player/GameModel/AIEngine) is new, purpose-built
+for this ruleset.
+
+**Status: 🟢 SUBMITTED, WAITING_FOR_REVIEW (2026-08-01).** App id `6796833591`, version `1.0.0`
+(id `f0f6f1a1-2e0f-4722-b367-725743a76193`), build `6410ad7b-b1f0-4bd3-bec4-ca254a9d5253`
+attached, reviewSubmission `be8d1659-eeed-4eb7-9a93-f103c398ce3c`. Release type: automatic
+(`AFTER_APPROVAL`).
+
+## Deploy / resubmit pattern
+
+No Xcode account/Distribution cert on this machine — pass the ASC API key explicitly to
+xcodebuild (see [[feedback_asc_release_and_signing]]):
+```
+xcodegen generate
+xcodebuild -project CoCaNgua.xcodeproj -scheme CoCaNgua -configuration Release \
+  -archivePath build/CoCaNgua.xcarchive -destination 'generic/platform=iOS' \
+  -allowProvisioningUpdates \
+  -authenticationKeyPath /Users/q/.appstoreconnect/private_keys/AuthKey_G85WXB4AF5.p8 \
+  -authenticationKeyID G85WXB4AF5 -authenticationKeyIssuerID 2e969722-fc4d-444c-af74-7e0233efd016 \
+  archive
+xcodebuild -exportArchive -archivePath build/CoCaNgua.xcarchive -exportPath build/export \
+  -exportOptionsPlist ExportOptions.plist -allowProvisioningUpdates \
+  -authenticationKeyPath /Users/q/.appstoreconnect/private_keys/AuthKey_G85WXB4AF5.p8 \
+  -authenticationKeyID G85WXB4AF5 -authenticationKeyIssuerID 2e969722-fc4d-444c-af74-7e0233efd016
+xcrun altool --upload-app --type ios -f build/export/CoCaNgua.ipa \
+  --apiKey G85WXB4AF5 --apiIssuer 2e969722-fc4d-444c-af74-7e0233efd016
+```
+Metadata scripts are idempotent — re-run after copy changes. No `asc_submit_cocangua.py`
+exists; submission was done via one-off `reviewSubmissions` → `reviewSubmissionItems` →
+`PATCH submitted=true` calls (copy the pattern from `asc_submit_woktonight.py` if
+resubmitting).
+
+## The ruleset — READ THIS BEFORE "FIXING" ANYTHING
+
+This is a specific, deliberately-chosen, internally-consistent house ruleset, picked
+instead of reconciling every regional Cờ Cá Ngựa / Ludo variant. **Do not "correct" it
+against a different Ludo/Pachisi variant you might know** — several of these choices are
+simplifications made on purpose for a quick single-sitting mobile session:
+
+- **Players & tokens**: 4 players (you + 3 AI, or up to 4 local humans in Pass & Play),
+  each with a colored home yard holding 4 tokens ("ngựa"/horses) and a fixed entry point
+  onto a shared **52-cell outer track** (a square loop, 13 cells per side — 4 colors ×
+  13 cells apart = 52). Each color also has its own **6-cell home stretch** (private
+  lane from the outer track into that color's center goal).
+- **Path model** (`Token.pathPosition`, see `Core/Board.swift`): 0 = in yard; 1...51 =
+  on the shared track (51 = one full lap minus the entry cell itself); 52...57 = in the
+  private home stretch; **57 = the goal cell**. A token must land on exactly 57 to
+  finish — 51 (lap) + 6 (home stretch) = 57.
+- **Turn structure**: roll one die. A token in the yard leaves (onto its color's entry
+  cell) only on exactly 6. A token on the board moves forward by the roll; if that would
+  overshoot the goal cell (57), that specific token simply has no legal move this turn
+  (not "clamped to the goal" — genuinely unusable for that token, though other tokens may
+  still have legal moves).
+- **Rolling a 6**: after resolving that move, roll again immediately (extra turn).
+  **Three 6s in a row forfeits the whole turn** — the third 6 doesn't move anything, turn
+  passes to the next player. (A 6 that can't be used — e.g. all tokens in yard on a
+  non-third 6 with no legal move — still earns the extra roll, matching how real Ludo
+  plays; this isn't explicitly required by the spec but isn't contradicted by it either.)
+- **No legal move at all**: turn passes with no move (e.g. all tokens in yard and roll≠6,
+  or every on-board token would overshoot its goal).
+- **Capture ("ăn quân")**: landing exactly on a cell occupied by an opponent's token
+  sends it back to that player's yard (needs another 6 to leave again) — UNLESS the cell
+  is a safe cell, in which case both tokens simply share it. A player's own tokens always
+  freely share a cell (no self-capture, no blocking). Capture is only possible on the
+  **shared track** — the private home stretch and yard never hold another color's token.
+- **Safe cells**: each color's entry cell (4) + 4 star cells, one placed 8 cells past
+  each entry (`(entryGlobalIndex + 8) % 52`) — **8 safe cells total**. Tokens there can
+  never be captured.
+- **Winning — first place only**: the instant one player gets all 4 tokens into their
+  center goal, that player wins and the match ends immediately. This is deliberately
+  simplified — there is **no 2nd/3rd/4th place tracking**, just first-place-ends-the-game,
+  matching a quick single-sitting mobile session. Don't add ranking logic expecting to
+  "complete" the match for the other 3 players.
+
+## AI (`Core/AIEngine.swift`)
+
+Given the rolled value, `GameModel.legalMoves(for:roll:)` enumerates every legal
+token-move for the current player; `AIEngine.chooseMove` scores/selects among them:
+
+- **Easy**: mostly random, light bias toward leaving the yard/capturing (weighted random
+  pick, not a hard rule).
+- **Normal**: greedy on the positive weights only — captures (heavy) + progress (further
+  along a token's own path scores higher) + leaving the yard. Ignores exposure risk.
+- **Hard**: same positive weights, plus a penalty if the destination cell is within
+  exact capture range (1...6 cells behind, non-safe, on the shared track) of an opponent
+  token — actively avoids obviously exposing itself.
+
+## Monetization (hybrid framing — this app is 4-player, not 1v1 or fixed-4-AI)
+
+`Core/PurchaseManager.swift` — copied from SamLoc's structure byte-for-byte, changed
+only `productID = "com.quyenngo.cocangua.pro"` and the DEBUG capture-flag check
+(`CN_CAPTURE != "upgrade"` gates `isPro`, so the paywall screenshot renders locked).
+
+`Views/UpgradeView.swift` — 3 feature rows, SamLoc's visual style:
+1. Hard AI difficulty for all 3 bots (free tier plays every bot at **Normal only** — the
+   difficulty picker on Home is entirely hidden for free users, not just Hard-locked).
+2. Local Pass & Play for up to 4 people sharing the device (free tier is solo-vs-3-AI
+   only; the "Pass & Play" mode segment on Home is locked).
+3. No ads, ever.
+
+`Views/HomeView.swift` implements the gate: `GameSetupMode` picker (Solo vs. AI / Pass &
+Play), and a `Stepper` for local player count (2...4) when Pass & Play + Pro. Free users
+tapping a locked control land on `UpgradeView`.
+
+## Structure
+
+- `CoCaNgua/Core/` — `Board.swift` (track/safe-cell geometry + rendering-point math),
+  `Token.swift`, `Player.swift`, `GameModel.swift` (turn state machine, legal-move
+  enumeration, capture resolution, win detection, `#if DEBUG captureSetup(_:)` for
+  screenshots), `AIEngine.swift`, `PurchaseManager.swift`, `Localization.swift`
+  (app-agnostic, copied verbatim from SamLoc).
+- `CoCaNgua/Views/` — `HomeView`, `GameView` (turn status, AI auto-play loop, move
+  picker chips as a reliable fallback to tapping tokens directly), `BoardView` (the
+  visual board — 52-cell ring + 4 home-stretch lanes + 4 yards + tokens, tap-to-move),
+  `DieView` (real pip layouts, not a digit), `UpgradeView`, `OnboardingView` (3 pages),
+  `RulesView` (7 sections).
+- `CoCaNgua/{en,vi}.lproj/Localizable.strings` — real hand-written bilingual strings
+  (not machine-translated), using "Cờ Cá Ngựa", "ngựa", "xúc xắc", "về đích", "ăn quân".
+- `capture_shots.py` — `CN_CAPTURE` / `CN_LANG` DEBUG launch-arg driven, real in-app
+  screenshots into `screenshots/final/{en,vi}/`.
+- `make_icon.py` — real artwork (see "App-Store-readiness pass" below), no longer a
+  stub.
+- `project.yml` — XcodeGen. Regenerate `.xcodeproj` with `xcodegen generate` (or
+  `./rebuild.sh`, which also runs the simulator + device build).
+
+## Board rendering geometry (Views/BoardView.swift + Core/Board.swift)
+
+The 52 track cells are placed at exactly-even points around the perimeter of a square
+(13 per side, via `Board.trackPoint`) — purely a rendering convenience, game logic never
+touches `CGPoint`. Each color's 6-cell home stretch is a straight lane from just inside
+its entry corner to the board center (`Board.homeStretchPoints`); the lane is
+deliberately confined to the **55%...97%** fraction of the corner-to-center line so it
+doesn't visually overlap that color's yard box (`Board.yardAnchor`, ~13% inset,
+20%-of-board-size box) — an earlier version had the first couple of home-stretch cells
+rendering on top of the yard box, which read as a bug (a token that had clearly left the
+yard looked like it was still sitting in it). If you resize the yard box or move its
+anchor, re-check this overlap.
+
+## Known judgment calls / simplifications from the build spec
+
+- **Grammar-safe turn/event text**: per the sibling apps' documented "You" trap, no
+  `%@`-substituted string is ever filled with "You" — `Player.name` is only ever
+  literally "You" when `GameModel.humanCount == 1` (solo mode) and it's that player's
+  turn, and `GameView` branches to a dedicated non-%@ string (`game.yourTurn`, etc.) in
+  exactly that case. Verify this holds if solo-mode naming logic ever changes.
+- **Live-formatted status/event text, not a stored log**: unlike SamLoc's `roundLog`
+  (pre-localized strings stored in the model), `GameModel.lastEvent` stores structured
+  data (`GameEvent` enum, no strings) and `GameView` formats it via `L()` at render time.
+  This means a mid-game language switch never leaves stale English text behind — worth
+  carrying forward to future siblings.
+- **Move picker chips**: `GameView` shows a row of tappable move chips (🐴 + capture/goal
+  icons) whenever it's a human's turn to move, in addition to direct on-board token
+  taps in `BoardView`. This was a deliberate reliability choice — the board's token tap
+  targets are small at mobile scale, so the chip row is the primary, reliable
+  interaction path and board taps are a bonus.
+- **AI turn-driving**: `GameView.maybeTriggerAI()` re-schedules itself after every AI
+  roll/move (0.7s delay) rather than a fixed-step loop, so a 6-roll chain of AI extra
+  turns plays out automatically and visibly, one step at a time.
+
+## Verified
+
+- `xcodegen generate` succeeds; `xcodebuild ... -destination 'platform=iOS Simulator,name=iPhone 17 Pro' build`
+  succeeds clean, no errors or warnings from app code.
+- Installed and launched on simulator; walked through onboarding, home (solo + Pass &
+  Play mode/difficulty pickers), a live mid-game board render, a near-win capture
+  (verifies exact-landing-on-goal legal-move logic and the move-chip UI), the locked
+  paywall, rules, and the Vietnamese locale — all via `CN_CAPTURE`/`CN_LANG`. No crashes.
+- `./rebuild.sh`'s simulator build step passes; the **device/archive build step fails**
+  with "No profiles for 'com.quyenngo.cocangua' were found" — expected, since the bundle
+  ID isn't registered in App Store Connect yet. That registration + real signing is part
+  of the later ASC step, not this build pass.
+
+## App-Store-readiness pass (2026-07-31)
+
+Icon, screenshots, and the legal site are done. Game logic was not touched.
+
+- **App icon**: `make_icon.py` rewritten from the die-pip stub into real artwork — a
+  bold solid horse-head silhouette (the Apple Symbols "♞" BLACK CHESS KNIGHT glyph,
+  which renders as a clean filled shape, not an outline) in deep red on a gold
+  rounded-square medallion/plaque, tilted -8°, on a rich royal-blue → near-black-navy
+  gradient background (one dominant accent color rather than cramming all 4 player
+  colors in). Matches the house single-emblem style (SamLoc's tilted "2♥" card).
+  Verified 1024×1024 RGB PNG at
+  `CoCaNgua/Assets.xcassets/AppIcon.appiconset/AppIcon.png`, reads clearly down to
+  60px. Also fixed `Contents.json` in that asset catalog, which was missing the
+  `"filename": "AppIcon.png"` key entirely — Xcode wouldn't have picked up any icon
+  image without it, stub or real.
+- **Screenshots**: `capture_shots.py` ran cleanly once pointed at an isolated
+  simulator — see gotcha below — producing `screenshots/final/{en,vi}/01-home.png`
+  through `04-rules.png` (8 images total). Every image was visually inspected
+  (Read tool, not just a green script exit): correct English/Vietnamese text with
+  proper diacritics and no mojibake, correct language per locale, the board renders
+  the 52-cell outer track + 4 home-stretch diagonals converging cleanly on the center
+  flag + 4 yards with tokens visible, distinct, and **not** overlapping (the
+  documented home-stretch/yard overlap bug is confirmed fixed in these real captures),
+  move/die UI legible, no placeholder text. One real bug found and fixed: the very
+  first capture (`en/01-home.png`) had iOS's one-time "Ready for Apple Intelligence"
+  system notification banner overlaid on a fresh simulator boot — fixed by adding a
+  throwaway warm-up launch (5s, then terminate) before the real capture loop in
+  `capture_shots.py`, so any first-boot system banner fires and clears before any
+  real screenshot is taken.
+  - **Gotcha for next time**: `find_device()` originally grabbed *any* booted
+    "iPhone ... Pro Max" simulator. This machine had several sibling apps' simulators
+    already booted and installed (`com.quyenngo.baucua`, `com.quyenngo.tienlen`, etc.
+    — this is a 5+-app lineup, not just this one), and the very first run's screenshots
+    silently came out as **Bầu Cua Pro's paywall and a Tiến Lên card-game screen** —
+    a different app's UI entirely, not a CoCaNgua bug, but a shared-simulator
+    contamination issue. Fixed by creating a dedicated `CoCaNgua-Capture` simulator
+    (`xcrun simctl create`) and having `find_device()` prefer it by name over any
+    generic "Pro Max" match. **Always visually inspect screenshots — a script that
+    exits 0 proves nothing about which app was actually on screen.**
+- **Legal site**: `~/Projects/cocangua-legal` — same template/CSS as
+  `fanorona-legal` (index/privacy/support, same no-data-collection and StoreKit-only-
+  IAP language), content adapted for this app (4-player race description; support
+  page's "How to play" section covers leaving-the-yard-on-6, the extra-roll-on-6 with
+  three-6s forfeit, exact-landing-to-finish, ăn quân capture, and the 8 safe cells;
+  "Difficulty levels" section matches `PurchaseManager`/`UpgradeView` exactly — free
+  tier is Normal-only AI solo vs. 3 bots, Pro unlocks Hard AI for all bots + local
+  Pass & Play up to 4 players + no ads). Public GitHub repo
+  `qngo9871-cmyk/cocangua-legal`, GitHub Pages enabled (`status: "built"`), live at
+  **https://qngo9871-cmyk.github.io/cocangua-legal/** (index, privacy.html, and
+  support.html all verified 200).
+
+## TODOs for the App Store Connect step (not done here, out of scope)
+
+- Register `com.quyenngo.cocangua` in ASC, set up a distribution provisioning profile
+  (the device/archive build already fails today with "No profiles for
+  'com.quyenngo.cocangua' were found" — expected until this is done).
+- IAP product `com.quyenngo.cocangua.pro` setup in ASC, pricing, review notes.
+- Upload the real icon/screenshots/legal-site URL from this pass into ASC metadata.

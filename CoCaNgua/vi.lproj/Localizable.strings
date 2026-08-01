@@ -1,0 +1,85 @@
+"home.title" = "Cờ Cá Ngựa";
+"home.subtitle" = "Đua Ngựa Việt Nam — Chơi Với AI";
+"home.mode" = "Chế Độ";
+"home.mode.solo" = "Một Mình vs AI";
+"home.mode.passAndPlay" = "Chơi Chung Máy";
+"home.mode.passAndPlayLocked" = "Mở khóa Chơi Chung Máy →";
+"home.players" = "%d Người Chơi";
+"home.difficulty" = "Độ Khó AI";
+"home.difficultyLocked" = "Bản miễn phí: AI luôn ở mức Vừa";
+"home.play" = "Chơi";
+"home.rules" = "Luật Đầy Đủ";
+"home.howtoplay" = "Hướng Dẫn";
+"home.upgrade" = "Mở khóa AI Khó, Chơi Chung Máy & hơn thế nữa →";
+
+"difficulty.easy" = "Dễ";
+"difficulty.normal" = "Vừa";
+"difficulty.hard" = "Khó";
+
+"player.you" = "Bạn";
+"player.local" = "Người Chơi %d";
+"player.color.red" = "Đỏ";
+"player.color.green" = "Xanh Lá";
+"player.color.yellow" = "Vàng";
+"player.color.blue" = "Xanh Dương";
+
+"game.quit" = "Thoát";
+"game.cancel" = "Hủy";
+"game.quitConfirm" = "Thoát ván này?";
+"game.newGame" = "Ván Mới";
+"game.done" = "Xong";
+"game.matchOver" = "Kết Thúc Trận";
+"game.youWin" = "Bạn thắng!";
+"game.win" = "%@ thắng!";
+"game.aiThinking" = "%@ đang suy nghĩ…";
+"game.yourTurn" = "Đến lượt bạn — đổ xúc xắc";
+"game.playerTurnRoll" = "Đến lượt %@ — đổ xúc xắc";
+"game.yourTurnMove" = "Đến lượt bạn — chọn một con ngựa";
+"game.playerTurnMove" = "Đến lượt %@ — đang chọn ngựa…";
+
+"event.rolledSix" = "Đổ được 6 — đổ lại nào!";
+"event.threeSixes" = "Ba lần 6 liên tiếp — mất lượt!";
+"event.noMove" = "Không có nước đi hợp lệ — mất lượt";
+"event.capturedYou" = "Bạn đã ăn quân ngựa của %@!";
+"event.captured" = "%@ đã ăn quân ngựa của %@!";
+"event.capturedPluralYou" = "Bạn đã ăn %d con ngựa!";
+"event.capturedPlural" = "%@ đã ăn %d con ngựa!";
+"event.reachedGoalYou" = "Một con ngựa đã về đích!";
+"event.reachedGoal" = "Một con ngựa của %@ đã về đích!";
+
+"upgrade.title" = "Cờ Cá Ngựa Pro";
+"upgrade.subtitle" = "Mở khóa trải nghiệm đầy đủ.";
+"upgrade.feature.hardAI" = "Độ khó AI Khó cho cả 3 đối thủ máy";
+"upgrade.feature.passAndPlay" = "Chơi Chung Máy — tới 4 người";
+"upgrade.feature.noAds" = "Không quảng cáo, mãi mãi";
+"upgrade.owned" = "Bạn đã sở hữu Cờ Cá Ngựa Pro ✓";
+"upgrade.buy" = "Mở Khóa — %@";
+"upgrade.buyFallback" = "Mở Khóa Cờ Cá Ngựa Pro";
+"upgrade.restore" = "Khôi Phục Giao Dịch";
+"upgrade.close" = "Để Sau";
+
+"rules.title" = "Luật Đầy Đủ";
+"rules.done" = "Xong";
+"rules.goal.title" = "Mục Tiêu";
+"rules.goal.body" = "Đưa cả 4 con ngựa của bạn ra khỏi chuồng, đi vòng quanh bàn cờ, và về đến đích. Người đầu tiên đưa cả 4 con ngựa về đích sẽ thắng ngay lập tức.";
+"rules.leaving.title" = "Ra Khỏi Chuồng";
+"rules.leaving.body" = "Một con ngựa còn trong chuồng chỉ có thể ra bàn cờ khi đổ được đúng số 6.";
+"rules.moving.title" = "Di Chuyển";
+"rules.moving.body" = "Di chuyển một con ngựa về phía trước theo số hiện trên xúc xắc. Ngựa không được đi quá đích — phải đi đúng số để dừng chính xác trên ô đích, nếu số đổ được quá lớn thì con ngựa đó không thể đi.";
+"rules.six.title" = "Đổ Được Số 6";
+"rules.six.body" = "Đổ được 6, sau khi đi xong bạn sẽ được đổ xúc xắc thêm một lần nữa. Nhưng ba lần 6 liên tiếp sẽ làm mất cả lượt — lần 6 thứ ba không được đi quân nào.";
+"rules.capture.title" = "Ăn Quân";
+"rules.capture.body" = "Đi quân ngựa của bạn dừng đúng vào ô có ngựa đối thủ để ăn quân, đuổi ngựa đó về chuồng — họ phải đổ lại số 6 mới ra được. Ngựa cùng màu của bạn có thể đứng chung một ô thoải mái.";
+"rules.safe.title" = "Ô An Toàn";
+"rules.safe.body" = "Ô xuất phát của mỗi màu, cộng với 4 ô có gắn ngôi sao được đặt đều quanh bàn cờ — tổng cộng 8 ô an toàn — giúp ngựa đứng trên đó không bao giờ bị ăn.";
+"rules.win.title" = "Chiến Thắng";
+"rules.win.body" = "Đây là cuộc đua chỉ tính người về nhất — ngay khi một người chơi đưa đủ 4 con ngựa về đích, trận đấu kết thúc luôn tại đó.";
+
+"onboarding.goal.title" = "Đua Ngựa Về Đích";
+"onboarding.goal.body" = "Bạn và tối đa 3 đối thủ, mỗi người đua 4 con ngựa quanh đường đua chung 52 ô. Ai đưa đủ 4 con ngựa về đích trước sẽ thắng.";
+"onboarding.dice.title" = "Đổ Xúc Xắc Để Đi";
+"onboarding.dice.body" = "Đổ đúng số 6 để đưa ngựa ra khỏi chuồng. Trên bàn cờ, di chuyển ngựa theo số đổ được — nhưng phải dừng đúng ô đích mới ghi điểm về đích, và đổ được 6 luôn cho bạn đổ thêm lần nữa.";
+"onboarding.capture.title" = "Ăn Quân!";
+"onboarding.capture.body" = "Đi quân dừng đúng vào ô có ngựa đối thủ để ăn quân, đuổi về chuồng. Các ô có gắn ngôi sao là ô an toàn, ngựa đứng đó không thể bị ăn.";
+"onboarding.next" = "Tiếp";
+"onboarding.begin" = "Chơi Thôi";

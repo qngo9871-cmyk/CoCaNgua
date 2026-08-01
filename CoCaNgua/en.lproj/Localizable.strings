@@ -1,0 +1,85 @@
+"home.title" = "Cờ Cá Ngựa";
+"home.subtitle" = "Vietnamese Horse Race — Solo vs. AI";
+"home.mode" = "Mode";
+"home.mode.solo" = "Solo vs. AI";
+"home.mode.passAndPlay" = "Pass & Play";
+"home.mode.passAndPlayLocked" = "Unlock Pass & Play →";
+"home.players" = "%d Local Players";
+"home.difficulty" = "AI Difficulty";
+"home.difficultyLocked" = "Free tier plays every bot at Normal";
+"home.play" = "Play";
+"home.rules" = "Full Rules";
+"home.howtoplay" = "How to Play";
+"home.upgrade" = "Unlock Hard AI, Pass & Play & more →";
+
+"difficulty.easy" = "Easy";
+"difficulty.normal" = "Normal";
+"difficulty.hard" = "Hard";
+
+"player.you" = "You";
+"player.local" = "Player %d";
+"player.color.red" = "Red";
+"player.color.green" = "Green";
+"player.color.yellow" = "Yellow";
+"player.color.blue" = "Blue";
+
+"game.quit" = "Quit";
+"game.cancel" = "Cancel";
+"game.quitConfirm" = "Quit this game?";
+"game.newGame" = "New Game";
+"game.done" = "Done";
+"game.matchOver" = "Match Over";
+"game.youWin" = "You win!";
+"game.win" = "%@ wins!";
+"game.aiThinking" = "%@ is thinking…";
+"game.yourTurn" = "Your turn — roll the die";
+"game.playerTurnRoll" = "%@'s turn — roll the die";
+"game.yourTurnMove" = "Your turn — pick a horse to move";
+"game.playerTurnMove" = "%@'s turn — picking a horse…";
+
+"event.rolledSix" = "Rolled a 6 — roll again!";
+"event.threeSixes" = "Three 6s in a row — turn forfeited!";
+"event.noMove" = "No legal move — turn passes";
+"event.capturedYou" = "You sent %@'s horse home!";
+"event.captured" = "%@ sent %@'s horse home!";
+"event.capturedPluralYou" = "You sent %d horses home!";
+"event.capturedPlural" = "%@ sent %d horses home!";
+"event.reachedGoalYou" = "A horse reached home!";
+"event.reachedGoal" = "%@'s horse reached home!";
+
+"upgrade.title" = "Cờ Cá Ngựa Pro";
+"upgrade.subtitle" = "Unlock the full experience.";
+"upgrade.feature.hardAI" = "Hard AI difficulty for all 3 bots";
+"upgrade.feature.passAndPlay" = "Local Pass & Play — up to 4 players";
+"upgrade.feature.noAds" = "No ads, ever";
+"upgrade.owned" = "You own Cờ Cá Ngựa Pro ✓";
+"upgrade.buy" = "Unlock — %@";
+"upgrade.buyFallback" = "Unlock Cờ Cá Ngựa Pro";
+"upgrade.restore" = "Restore Purchases";
+"upgrade.close" = "Not Now";
+
+"rules.title" = "Full Rules";
+"rules.done" = "Done";
+"rules.goal.title" = "Goal";
+"rules.goal.body" = "Race all 4 of your ngựa (horses) out of your yard, around the board, and into your home stretch. The first player to get all 4 horses về đích (reach the goal) wins the match immediately.";
+"rules.leaving.title" = "Leaving the Yard";
+"rules.leaving.body" = "A horse sitting in your yard can only enter the board on a roll of exactly 6.";
+"rules.moving.title" = "Moving";
+"rules.moving.body" = "Move a horse forward by the number shown on the xúc xắc (die). A horse can't overshoot its own goal cell — it must land exactly on it to finish, so a roll that's too big for that horse simply can't be used on it.";
+"rules.six.title" = "Rolling a 6";
+"rules.six.body" = "Roll a 6 and, after your move, you get to roll again right away. But three 6s in a row forfeits your whole turn — the third 6 doesn't move anything.";
+"rules.capture.title" = "Capturing";
+"rules.capture.body" = "Land exactly on a cell occupied by an opponent's horse to ăn quân (capture it) and send it straight back to their yard — they'll need another 6 to leave again. Your own horses can freely share a cell.";
+"rules.safe.title" = "Safe Cells";
+"rules.safe.body" = "Each color's entry cell, plus 4 star-marked cells spaced evenly around the board — 8 safe cells in all — protect any horse standing on them from capture.";
+"rules.win.title" = "Winning";
+"rules.win.body" = "This is a race to first place only — the moment one player gets all 4 horses home, the match ends right there.";
+
+"onboarding.goal.title" = "Race Your Horses Home";
+"onboarding.goal.body" = "You and up to 3 opponents each race 4 ngựa (horses) around a shared 52-cell track. Get all 4 of yours home first to win.";
+"onboarding.dice.title" = "Roll to Move";
+"onboarding.dice.body" = "Roll exactly a 6 to leave your yard. On the board, move a horse forward by the roll — but you must land exactly on your goal cell to finish it, and a 6 always earns you another roll.";
+"onboarding.capture.title" = "Ăn Quân — Capture!";
+"onboarding.capture.body" = "Land exactly on an opponent's horse to send it back to their yard. Star-marked safe cells protect horses standing on them from capture.";
+"onboarding.next" = "Next";
+"onboarding.begin" = "Let's Play";
