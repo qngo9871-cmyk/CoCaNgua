@@ -29,7 +29,10 @@ struct GameView: View {
                 .aspectRatio(1, contentMode: .fit)
                 .padding(.horizontal)
 
-            DieView(value: game.diceValue, isRollable: canRoll) { game.rollDie() }
+            DieView(value: game.diceValue, isRollable: canRoll) {
+                Haptics.diceRolled()
+                game.rollDie()
+            }
 
             if game.phase == .awaitingMove, game.currentPlayer.isHuman {
                 movePicker
@@ -62,6 +65,9 @@ struct GameView: View {
         .onChange(of: game.currentPlayerIndex) { _ in maybeTriggerAI() }
         .onChange(of: game.phase) { _ in maybeTriggerAI() }
         .onChange(of: game.lastEvent) { event in showEventBanner(event) }
+        .onChange(of: game.outcome) { outcome in
+            if outcome != .ongoing { Haptics.matchWon() }
+        }
         .alert(outcomeTitle, isPresented: .constant(game.outcome != .ongoing)) {
             Button(L("game.newGame")) { game.startMatch(humanCount: game.humanCount, aiDifficulty: game.aiDifficulty) }
             Button(L("game.done")) { dismiss() }
@@ -176,6 +182,11 @@ struct GameView: View {
 
     private func showEventBanner(_ event: GameEvent?) {
         guard let event, let text = eventText(event) else { return }
+        switch event {
+        case .captured: Haptics.capture()
+        case .reachedGoal: Haptics.reachedGoal()
+        default: break
+        }
         eventBannerWorkItem?.cancel()
         withAnimation { eventBanner = text }
         let work = DispatchWorkItem { withAnimation { eventBanner = nil } }

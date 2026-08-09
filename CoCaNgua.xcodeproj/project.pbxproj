@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01DEDE77CB61E51208811473 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2CFDD3C8B1FC59A1B334B /* Haptics.swift */; };
 		087255D7AD251180A54BA484 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BEAA76F16A1B2614F39970 /* Player.swift */; };
 		1B894D0C7061170CB4FC98EB /* AIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F8A3B43696D5A0595BD04A /* AIEngine.swift */; };
 		27EB4520B4501CC9DE04BD50 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391FE0BF74B3B416FBF2D47C /* GameView.swift */; };
@@ -45,6 +46,7 @@
 		D2B7B4204074AA42FE8541A5 /* GameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameModel.swift; sourceTree = "<group>"; };
 		DD33B00E91C251DC12111B69 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
 		DDFC471B79DFF20D4606C447 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DFB2CFDD3C8B1FC59A1B334B /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
 		E4B7DABBAEDB7F8B24F4CD11 /* BoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardView.swift; sourceTree = "<group>"; };
 		E6996895D24AF3CB49191B1E /* DieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DieView.swift; sourceTree = "<group>"; };
 		F8EA42CC91ECE6D804EB845D /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
@@ -57,6 +59,7 @@
 				B6F8A3B43696D5A0595BD04A /* AIEngine.swift */,
 				A6FD02758D5214855B499C97 /* Board.swift */,
 				D2B7B4204074AA42FE8541A5 /* GameModel.swift */,
+				DFB2CFDD3C8B1FC59A1B334B /* Haptics.swift */,
 				2901B606C7D032817C8FB79F /* Localization.swift */,
 				65BEAA76F16A1B2614F39970 /* Player.swift */,
 				DD33B00E91C251DC12111B69 /* PurchaseManager.swift */,
@@ -189,6 +192,7 @@
 				7A7B5C6CEED353158960589C /* DieView.swift in Sources */,
 				54E4D22CD50E338CF0F9A54A /* GameModel.swift in Sources */,
 				27EB4520B4501CC9DE04BD50 /* GameView.swift in Sources */,
+				01DEDE77CB61E51208811473 /* Haptics.swift in Sources */,
 				B947BFFAFA61D0754CA127E3 /* HomeView.swift in Sources */,
 				3002A037BD64869809E19AFB /* Localization.swift in Sources */,
 				E5BED198C7161D49EC5B3807 /* OnboardingView.swift in Sources */,
@@ -250,7 +254,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = SM99L22Q84;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -266,7 +270,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -283,7 +287,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Cờ Cá Ngựa";
@@ -294,7 +298,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.quyenngo.cocangua;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -306,7 +310,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Cờ Cá Ngựa";
@@ -317,7 +321,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.quyenngo.cocangua;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -359,7 +363,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = SM99L22Q84;
 				ENABLE_PREVIEWS = YES;
@@ -381,7 +385,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;

@@ -9,10 +9,88 @@ neither Fanorona's 1v1 board game nor SamLoc's 4-AI card game — it's a 4-playe
 race, so the Core/ layer (Board/Token/Player/GameModel/AIEngine) is new, purpose-built
 for this ruleset.
 
-**Status: 🟢 SUBMITTED, WAITING_FOR_REVIEW (2026-08-01).** App id `6796833591`, version `1.0.0`
-(id `f0f6f1a1-2e0f-4722-b367-725743a76193`), build `6410ad7b-b1f0-4bd3-bec4-ca254a9d5253`
-attached, reviewSubmission `be8d1659-eeed-4eb7-9a93-f103c398ce3c`. Release type: automatic
-(`AFTER_APPROVAL`).
+**Status: 🟡 READY FOR RESUBMISSION AFTER 2026-08-18, pending Apple's Guideline 5.6 hold.**
+This app was one of 19 apps hit by an account-level "Developer Code of Conduct — Review
+Suspended" flag (near-certainly triggered by submitting ~19 similar template-style apps
+within an 8-day window, 2026-08-01 through 2026-08-08), not a per-app rejection.
+Resubmission is hard-blocked until 2026-08-18. App id `6796833591`. The version originally
+submitted 2026-08-01 was `1.0.0` (id `f0f6f1a1-2e0f-4722-b367-725743a76193`), build
+`6410ad7b-b1f0-4bd3-bec4-ca254a9d5253`, reviewSubmission `be8d1659-eeed-4eb7-9a93-f103c398ce3c`,
+release type automatic (`AFTER_APPROVAL`) — that reviewSubmission/build predate the pass
+below and will need a fresh build attached at resubmission time (out of scope here, no ASC
+calls were made in this pass). **Local marketing version is now `1.0.1` / build `2`** (bumped
+2026-08-09, see review pass below) — bump again if further local changes land before the
+window reopens.
+
+## Pre-resubmission quality review (2026-08-09)
+
+Full local-only review pass (no ASC calls, no App Store Connect changes — see hard
+constraint above). Verdict: **this app was already in genuinely good shape**, unlike the
+generic "low-differentiation template" framing of the 19-app wave — real bilingual
+localization, real onboarding, a correct and complete ruleset implementation, no
+placeholder/TODO/debug text anywhere in the codebase. This was the least-broken app in
+the wave reviewed so far.
+
+- **Build**: `xcodegen generate` + `xcodebuild ... -destination 'platform=iOS Simulator,name=iPhone 17 Pro' build`
+  — clean, zero errors, zero warnings (verified with a `grep -i "warning:|error:"` over
+  full build output, not just skimming).
+- **Game logic**: walked `Core/Board.swift`, `Token.swift`, `Player.swift`,
+  `GameModel.swift`, `AIEngine.swift` line by line against the documented house ruleset
+  above — path model (0/1-51/52-57), leave-yard-on-6, exact-landing-to-finish,
+  capture/safe-cell resolution, 3-consecutive-6s forfeit, win detection — every rule
+  matches the spec exactly, no stubs, no shortcuts. Verified live on-device via the
+  `CN_CAPTURE=midgame` and `CN_CAPTURE=nearwin` debug harness: board renders correctly
+  (52-cell ring, 4 home-stretch diagonals converging on the center flag, yards, safe-cell
+  stars), and the near-win capture confirmed the exact-landing legal-move logic + move-chip
+  UI both work.
+- **Placeholder/debug-text sweep**: `grep -rnE "TODO|FIXME|placeholder|Lorem ipsum|dummy|XXX"`
+  across all Swift sources — zero hits. All `#if DEBUG` blocks (CN_CAPTURE/CN_LANG/
+  CN_SKIP_ONBOARDING) are correctly compiled out of Release.
+- **DEBUG isPro double-gating check** (recurring bug pattern in this developer's other
+  apps): `PurchaseManager.isPro` is a single `@Published` source of truth, read the same
+  way everywhere it's used (`HomeView`, `UpgradeView`). The `#if DEBUG`/`#else` split only
+  changes *how* `isPro` is computed (unconditionally true except during
+  `CN_CAPTURE=upgrade` screenshot capture, vs. real `Transaction.currentEntitlements` in
+  Release) — there's no second cached flag anywhere that could desync from it. Not a bug
+  here.
+- **IAP wiring**: `PurchaseManager.swift` — StoreKit 2, verified + unverified
+  transactions both grant `isPro` (documented rationale: don't silently drop legitimate
+  purchases on JWS edge cases), transactions always finished, restore path present,
+  10s timeout on product load. Looks correct; untested against a live sandbox account
+  (no ASC/sandbox access in this pass per the hard constraint).
+- **Onboarding**: real 3-page first-launch walkthrough (`OnboardingView`, shown once via
+  `hasSeenOnboarding` AppStorage, re-accessible from Home's "How to Play" and from the
+  in-game toolbar "?" button) plus a separate 7-section `RulesView` reference sheet.
+  Confirmed present and wired correctly, not just referenced in CLAUDE.md.
+- **Localization**: `en.lproj`/`vi.lproj` both 85 lines, **exact key parity** (diffed the
+  sorted key sets — zero missing/extra keys either direction), every `L("...")` call and
+  every dynamic key (`color.nameKey`, `difficulty.titleKey`, rules/onboarding tuple keys)
+  resolves to a defined string. Vietnamese text read for quality: natural, correctly
+  accented, no mojibake, no machine-translation tells.
+- **Fix applied — haptic feedback (genuine differentiation, small scope)**: the app had
+  *zero* haptics anywhere, unusual for a dice/board game. Added `Core/Haptics.swift`
+  (cached `UIImpactFeedbackGenerator`/`UINotificationFeedbackGenerator` instances per
+  Apple's latency guidance) and wired it into `GameView`: a light tap on every human die
+  roll, a rigid tap on any capture (either side), and a success notification on reaching
+  the goal / winning the match. Purely additive — no game-logic or gating changes.
+- **Version bump**: `MARKETING_VERSION` `1.0.0` → `1.0.1`, `CURRENT_PROJECT_VERSION`
+  `1` → `2`, in `project.yml` (both the base and target-level settings blocks — Xcode's
+  `GENERATE_INFOPLIST_FILE` injects these from build settings at build time, not from
+  the checked-in `Info.plist`, which xcodegen regenerates from `project.yml` on every
+  `xcodegen generate` and will keep showing a stale placeholder `1.0`/`1` — confirmed via
+  `PlistBuddy` against the actual built app bundle that `1.0.1`/`2` is what ships;
+  the stale placeholder in the source `Info.plist` is cosmetic and harmless).
+
+### What's still open
+
+- No changes were made to App Store Connect (blocked by the 5.6 hold and by this task's
+  explicit hard constraint) — a fresh archive/build still needs to be created and
+  attached to a new reviewSubmission once 2026-08-18 passes, following the Deploy
+  pattern below.
+- IAP purchase/restore flow is code-reviewed but not sandbox-tested in this pass.
+- No functional/logic bugs were found to fix — the only code change this pass is the new
+  haptics feature; everything else was verification that confirmed the app was already
+  correct.
 
 ## Deploy / resubmit pattern
 
