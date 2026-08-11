@@ -92,6 +92,36 @@ the wave reviewed so far.
   haptics feature; everything else was verification that confirmed the app was already
   correct.
 
+## Polish pass (2026-08-12)
+
+Part of the pre-2026-08-18 resubmission polish sweep across all 18 apps in the 5.6 wave
+(user asked to check bugs, onboarding, UI professionalism, and ASO/SEO copy for each).
+
+- **UI fix**: `GameView` was top-hugging its content, leaving a large dead black gap
+  below the Quit button on tall screens (visible in the marketing screenshots — the
+  board itself is width-bound at 1:1 aspect so it can't grow taller, but the surrounding
+  whitespace was unbalanced). Added `Spacer(minLength: 0)` before `playerBadges` and
+  after the Quit button so the content block centers vertically instead of sitting at
+  the top with all the slack dumped below it. Bumped `VStack` spacing 10 → 16 for a bit
+  more breathing room. Purely cosmetic, no logic touched.
+- **Screenshots regenerated** (`capture_shots.py`) to reflect the layout fix — only
+  `02-midgame.png` and `03-upgrade.png` changed (the only screens GameView affects;
+  01-home/04-rules are OnboardingView/RulesView, untouched). Pushed to ASC via
+  `asc_push_cocangua_screenshots.py`.
+- **ASO keywords refreshed** in `asc_push_cocangua.py` and pushed live: dropped terms
+  already covered by the indexed name/subtitle (e.g. "vietnamese ludo", "race game",
+  "cờ việt nam", "đua ngựa") and added higher-value non-redundant search terms —
+  `pachisi`/`parcheesi` (global Ludo-family search terms this app wasn't targeting) and
+  `multiplayer`/`board` (en), `cá ngựa`/`pachisi`/`board game` (vi). Description and
+  promotional text were already strong from the original submission — left unchanged.
+  Pushed via `asc_push_cocangua.py` (App Info + version localizations updated
+  successfully; the IAP localization PATCH 409'd with `IAP_VERSION_UNMODIFIABLE` —
+  pre-existing, the IAP is locked while attached to the rejected version; not something
+  this pass needed to touch, name/price were already correct).
+- Onboarding, localization, and IAP-gating logic were re-checked against the 2026-08-09
+  review findings above — still solid, no regressions.
+- Version bump: `MARKETING_VERSION` 1.0.1 → 1.0.2, `CURRENT_PROJECT_VERSION` 2 → 3.
+
 ## Deploy / resubmit pattern
 
 No Xcode account/Distribution cert on this machine — pass the ASC API key explicitly to

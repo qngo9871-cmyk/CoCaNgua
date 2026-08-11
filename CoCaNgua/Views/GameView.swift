@@ -11,7 +11,9 @@ struct GameView: View {
     @State private var eventBannerWorkItem: DispatchWorkItem?
 
     var body: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: 16) {
+            Spacer(minLength: 0)
+
             playerBadges
 
             Text(statusText)
@@ -27,7 +29,7 @@ struct GameView: View {
 
             BoardView(game: game)
                 .aspectRatio(1, contentMode: .fit)
-                .padding(.horizontal)
+                .padding(.horizontal, 8)
 
             DieView(value: game.diceValue, isRollable: canRoll) {
                 Haptics.diceRolled()
@@ -43,6 +45,8 @@ struct GameView: View {
             }
             .buttonStyle(.bordered)
             .padding(.top, 4)
+
+            Spacer(minLength: 0)
         }
         .padding(.vertical)
         .navigationTitle(L("home.title"))
