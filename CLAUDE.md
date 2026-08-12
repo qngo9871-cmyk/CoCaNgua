@@ -122,6 +122,23 @@ Part of the pre-2026-08-18 resubmission polish sweep across all 18 apps in the 5
   review findings above — still solid, no regressions.
 - Version bump: `MARKETING_VERSION` 1.0.1 → 1.0.2, `CURRENT_PROJECT_VERSION` 2 → 3.
 
+## Build staged for resubmission (2026-08-13)
+
+Archived, exported, and uploaded a Release build ahead of the staggered resubmission — still
+blocked until 2026-08-18 by the Guideline 5.6 account-level hold, this app resubmits
+**2026-08-18 (solo test)** (batch 1). Build **1.0.2 (3)** uploaded via
+`xcrun altool --upload-app` (Delivery UUID `adc79fb3-0592-4875-95ab-91c5b675fd06`), processed to `VALID` by Apple, and
+attached to the existing `REJECTED` appStoreVersion (id `f0f6f1a1-2e0f-4722-b367-725743a76193`) via a direct
+`PATCH appStoreVersions/{id}/relationships/build` API call — independently re-verified via a
+follow-up `GET` on the same relationship, not just trusted from the PATCH's 204 response.
+
+**Deliberately NOT done yet** — waiting for the user's explicit go-ahead on this app's
+scheduled date, per the staggered resubmission plan:
+1. Tick the Pro IAP into this version in the App Store Connect **web UI** — the API has no
+   way to do this; it must be done from the version's own page (not the IAP's own page, which
+   creates an orphaned draft submission — a mistake this portfolio hit once before).
+2. Submit for review.
+
 ## Deploy / resubmit pattern
 
 No Xcode account/Distribution cert on this machine — pass the ASC API key explicitly to
