@@ -70,6 +70,38 @@ whole game" shape that produced zero IAP conversions on ChineseChess and SamLoc.
   additionally still blocked by the account-level Guideline 5.6 hold described below
   until 2026-08-18 regardless.
 
+### Build 4 (v1.0.3) archived/exported/uploaded — 2026-08-18, NOT attached, NOT submitted
+
+**Uncommitted state found at the start of this pass**: `project.yml` was already committed
+at `MARKETING_VERSION 1.0.2` / `CURRENT_PROJECT_VERSION 3` (from the 2026-08-12 polish pass),
+but `CoCaNgua.xcodeproj/project.pbxproj` had an **uncommitted** working-tree diff bumping it
+from `1.0.1`/`2` to `1.0.2`/`3` — i.e. the pbxproj just hadn't been regenerated (`xcodegen
+generate`) after `project.yml` was last edited. This was a stale `xcodegen generate` gap, not
+a competing version decision — treated `1.0.2`/`3` as the already-intended target and folded
+it in via a fresh `xcodegen generate` rather than double-bumping blindly on top of it.
+
+However, ASC already has build number **`3`** uploaded and `VALID` (from "Build staged for
+resubmission (2026-08-13)", Delivery UUID `adc79fb3-...`, still attached to version
+`f0f6f1a1-...` which ASC currently reports as versionString `1.0.0`). Since build 3 already
+exists in ASC and today's trial-paywall commit (`1e9a6ac`) is new code on top of it, this pass
+bumped **past** 1.0.2/3 rather than reusing it:
+
+- **Version bump**: `project.yml` (both blocks) `MARKETING_VERSION` `1.0.2` → **`1.0.3`**,
+  `CURRENT_PROJECT_VERSION` `3` → **`4`** — higher than both the local value and ASC's highest
+  existing build number (`3`)/versionString (`1.0.0`). `xcodegen generate` re-run, `pbxproj`
+  confirmed updated (4/4 occurrences each key).
+- **Archive/export/upload**: `xcodebuild archive` → `** ARCHIVE SUCCEEDED **`; `-exportArchive`
+  (existing `ExportOptions.plist`, `method=app-store`, unchanged) → `** EXPORT SUCCEEDED **`;
+  `xcrun altool --upload-app` → `UPLOAD SUCCEEDED`, Delivery UUID
+  `b46ddc05-35c1-4f43-a49c-3425ab31dc5a`.
+- **Processing**: polled `GET /v1/apps/6796833591/builds` — build
+  `b46ddc05-35c1-4f43-a49c-3425ab31dc5a` (`version: "4"`) reached **`processingState: VALID`**.
+- **Deliberately NOT done**: build not attached to any `appStoreVersion`, no
+  `reviewSubmission` touched, **not submitted for review**. This app is still hard-blocked by
+  the account-level Guideline 5.6 hold and its own resubmission schedule — nothing here changes
+  that; this build is just staged and available in ASC for whenever the user decides to
+  proceed.
+
 ## Pre-resubmission quality review (2026-08-09)
 
 Full local-only review pass (no ASC calls, no App Store Connect changes — see hard
