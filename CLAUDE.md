@@ -70,7 +70,33 @@ whole game" shape that produced zero IAP conversions on ChineseChess and SamLoc.
   additionally still blocked by the account-level Guideline 5.6 hold described below
   until 2026-08-18 regardless.
 
-### Build 4 (v1.0.3) archived/exported/uploaded — 2026-08-18, NOT attached, NOT submitted
+### Build 5 (v1.0.4) — real "New Game" bypass fixed, supersedes build 4 — 2026-08-18
+
+An independent audit (read-only, run after build 4 above was already uploaded) found a
+genuine exploit in the trial-lock: `GameView`'s post-match "New Game" alert button called
+`game.startMatch(...)` directly on the same `GameModel` instance, with **no re-check of
+`trialActive`/`isPro` at all**. `HomeView.startGame()`'s gate only fires on the *first*
+match start; once in `GameView`, a non-Pro player could start one match during a legitimate
+trial window and then tap "New Game" indefinitely, forever, straight through and past trial
+expiry — never returning to `HomeView`, never hitting the gate again. This is exactly the
+"permanently free" bug the whole portfolio rollout exists to close, just reached via a second
+entry point instead of the picker.
+
+**Fix**: `GameView.swift` gained its own `purchases` (`PurchaseManager.shared`), a
+`trialExpired` computed property mirroring `HomeView`'s, and a `startNewGame()` helper that
+gates on `game.humanCount == 1 && trialExpired` (solo) or `game.humanCount > 1 && !isPro`
+(Pass & Play) before calling `startMatch`, presenting `UpgradeView` instead when blocked —
+same shape as `HomeView.startGame()`. The alert's "New Game" button now calls
+`startNewGame()` instead of `game.startMatch(...)` directly.
+
+**Version bumped again**: 1.0.3(4) → **1.0.4(5)** — build 4 (uploaded just before this fix
+was found) still has the bypass and should NOT be the build that ever ships; build 5 is the
+one to use. Archived/exported/uploaded the same way (Delivery UUID
+`b966db53-59eb-4530-bf64-309957a87eeb`), polled to **`processingState: VALID`**. Still not
+attached to any `appStoreVersion`, still not submitted — same staggered-rollout hold as
+every other app in this batch.
+
+### Build 4 (v1.0.3) archived/exported/uploaded — 2026-08-18, NOT attached, NOT submitted — superseded by build 5 above, do not use
 
 **Uncommitted state found at the start of this pass**: `project.yml` was already committed
 at `MARKETING_VERSION 1.0.2` / `CURRENT_PROJECT_VERSION 3` (from the 2026-08-12 polish pass),

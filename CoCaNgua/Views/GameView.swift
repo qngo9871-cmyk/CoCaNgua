@@ -2,13 +2,19 @@ import SwiftUI
 
 struct GameView: View {
     @ObservedObject var game: GameModel
+    @StateObject private var purchases = PurchaseManager.shared
     @Environment(\.dismiss) private var dismiss
 
     @State private var isAIThinking = false
     @State private var showHowToPlay = false
     @State private var showQuitConfirm = false
+    @State private var showUpgrade = false
     @State private var eventBanner: String?
     @State private var eventBannerWorkItem: DispatchWorkItem?
+
+    private var trialExpired: Bool {
+        !purchases.isPro && !purchases.trialActive
+    }
 
     var body: some View {
         VStack(spacing: 16) {
@@ -73,11 +79,12 @@ struct GameView: View {
             if outcome != .ongoing { Haptics.matchWon() }
         }
         .alert(outcomeTitle, isPresented: .constant(game.outcome != .ongoing)) {
-            Button(L("game.newGame")) { game.startMatch(humanCount: game.humanCount, aiDifficulty: game.aiDifficulty) }
+            Button(L("game.newGame")) { startNewGame() }
             Button(L("game.done")) { dismiss() }
         } message: {
             Text(statusText)
         }
+        .sheet(isPresented: $showUpgrade) { UpgradeView() }
         #if DEBUG
         .onAppear {
             if let capture = ProcessInfo.processInfo.environment["CN_CAPTURE"], capture != "home" {
@@ -202,6 +209,18 @@ struct GameView: View {
 
     private var canRoll: Bool {
         game.outcome == .ongoing && game.phase == .awaitingRoll && game.currentPlayer.isHuman
+    }
+
+    private func startNewGame() {
+        if game.humanCount == 1 && trialExpired {
+            showUpgrade = true
+            return
+        }
+        if game.humanCount > 1 && !purchases.isPro {
+            showUpgrade = true
+            return
+        }
+        game.startMatch(humanCount: game.humanCount, aiDifficulty: game.aiDifficulty)
     }
 
     private func maybeTriggerAI() {
