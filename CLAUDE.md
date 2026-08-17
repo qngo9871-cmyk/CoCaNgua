@@ -22,6 +22,54 @@ calls were made in this pass). **Local marketing version is now `1.0.1` / build 
 2026-08-09, see review pass below) — bump again if further local changes land before the
 window reopens.
 
+## 2026-08-18 — 7-day trial, then everything locks (no permanent free tier)
+
+Portfolio-wide rollout of the trial-then-paywall pattern (siblings ChineseChess and
+SamLoc already have this — see `feedback_no_permanent_free_tier_trials_only` and
+`project_chinesechess_trial_paywall_pilot` memories). CoCaNgua's free tier before this
+pass was **Solo vs. 3 AI at Normal difficulty, forever, no Pro required** — the entire
+core single-player loop, with only Pass & Play (up to 4 local players) and non-Normal
+difficulty (Easy/Hard) ever gated behind Pro. That's the same "free tier is already the
+whole game" shape that produced zero IAP conversions on ChineseChess and SamLoc.
+
+- **`Core/PurchaseManager.swift`**: added `trialActive`/`trialDaysRemaining`, backed by
+  a `firstLaunchDate` UserDefaults key and a 7-day `trialDuration`, merged into the
+  existing `init()` (transaction listener setup untouched) via a new
+  `evaluateTrialStatus()`. Existing installs with no stored `firstLaunchDate` get the
+  clock started by this update rather than being locked out immediately.
+- **`Views/HomeView.swift`**: new `trialExpired` computed property
+  (`!purchases.isPro && !purchases.trialActive`) now gates Solo mode itself in
+  `startGame()` — previously Solo/Normal had no Pro or trial check at all. Pass & Play
+  and the full difficulty picker remain Pro-only regardless of trial state (unchanged —
+  those were already paid-only tiers, consistent with the SamLoc pattern where
+  already-Pro-only tiers like Hard stay locked even during trial). Added the
+  trial-days-remaining footnote under Play, switched the upgrade footnote to
+  "trial ended" copy once expired, and appended a 🔒 to the Play button and Solo mode
+  label when the trial has lapsed.
+- **`Views/UpgradeView.swift`**: subtitle switches to `upgrade.subtitle.trialended` once
+  `!purchases.isPro && !purchases.trialActive`.
+- **Localization**: added `home.upgrade.trialended`, `home.trialdays`,
+  `home.mode.soloLocked`, and `upgrade.subtitle.trialended` to both `en.lproj` and
+  `vi.lproj` (hand-written Vietnamese, not machine-translated, matching this app's
+  existing tone).
+- **Fixed a latent DEBUG double-gate leak found while in `PurchaseManager.swift`**:
+  `updateEntitlementStatus()`'s DEBUG branch was `isPro = CN_CAPTURE != "upgrade"` —
+  this only exempted the upgrade screenshot. `CN_CAPTURE=home` (and the
+  `CN_SKIP_ONBOARDING`-only home-capture path) fell through to `isPro = true` and
+  leaked "already purchased" into Home screenshots too, which would have hidden all the
+  new locked-state UI from this pass in App Store listing screenshots. Re-gated to
+  exempt both the `upgrade` and `home` capture paths, matching the SapXam/Chan reference
+  pattern.
+- **Build verified**: `xcodebuild -project CoCaNgua.xcodeproj -scheme CoCaNgua
+  -destination 'generic/platform=iOS' -configuration Debug build` — `** BUILD SUCCEEDED
+  **`, zero warnings/errors from app code.
+- **No version bump, no archive/export/upload, no App Store Connect calls** — this pass
+  is code-only. **NOT YET SUBMITTED — held for the user's explicit go-ahead**, same as
+  ChineseChess/SamLoc: this is a real product change for CoCaNgua's live users (once the
+  5.6 hold clears and this app resubmits), not something to ship silently. CoCaNgua is
+  additionally still blocked by the account-level Guideline 5.6 hold described below
+  until 2026-08-18 regardless.
+
 ## Pre-resubmission quality review (2026-08-09)
 
 Full local-only review pass (no ASC calls, no App Store Connect changes — see hard

@@ -4,6 +4,7 @@
 "home.mode.solo" = "Solo vs. AI";
 "home.mode.passAndPlay" = "Pass & Play";
 "home.mode.passAndPlayLocked" = "Unlock Pass & Play →";
+"home.mode.soloLocked" = "Trial ended — unlock to keep racing →";
 "home.players" = "%d Local Players";
 "home.difficulty" = "AI Difficulty";
 "home.difficultyLocked" = "Free tier plays every bot at Normal";
@@ -11,6 +12,8 @@
 "home.rules" = "Full Rules";
 "home.howtoplay" = "How to Play";
 "home.upgrade" = "Unlock Hard AI, Pass & Play & more →";
+"home.upgrade.trialended" = "Trial ended — unlock to keep playing →";
+"home.trialdays" = "Free trial — %d day(s) left";
 
 "difficulty.easy" = "Easy";
 "difficulty.normal" = "Normal";
@@ -49,6 +52,7 @@
 
 "upgrade.title" = "Cờ Cá Ngựa Pro";
 "upgrade.subtitle" = "Unlock the full experience.";
+"upgrade.subtitle.trialended" = "Your 7-day free trial has ended. Unlock Cờ Cá Ngựa Pro to keep playing.";
 "upgrade.feature.hardAI" = "Hard AI difficulty for all 3 bots";
 "upgrade.feature.passAndPlay" = "Local Pass & Play — up to 4 players";
 "upgrade.feature.noAds" = "No ads, ever";

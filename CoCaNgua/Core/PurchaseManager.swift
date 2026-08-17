@@ -10,13 +10,45 @@ class PurchaseManager: ObservableObject {
     @Published var productLoadFailed = false
     @Published var isPurchasing = false
     @Published var purchaseError: String?
+    @Published var trialActive = true
 
     private let productID = "com.quyenngo.cocangua.pro"
     private var transactionListener: Task<Void, Never>?
 
+    private let firstLaunchKey = "firstLaunchDate"
+    private let trialDuration: TimeInterval = 7 * 24 * 60 * 60
+
+    /// Days left in the 7-day free trial (0 once expired). Once it elapses, Solo vs.
+    /// AI at Normal difficulty — the only tier that used to be free forever — locks
+    /// behind the paywall too. There is no permanently free tier anymore.
+    var trialDaysRemaining: Int {
+        let defaults = UserDefaults.standard
+        guard let firstLaunch = defaults.object(forKey: firstLaunchKey) as? Date else { return 7 }
+        let remaining = trialDuration - Date().timeIntervalSince(firstLaunch)
+        return max(0, Int(ceil(remaining / (24 * 60 * 60))))
+    }
+
     init() {
         transactionListener = listenForTransactions()
+        evaluateTrialStatus()
         Task { await updateEntitlementStatus() }
+    }
+
+    /// Reads (or sets, on first-ever launch) the trial start date and updates
+    /// `trialActive`. Existing installs upgrading from a pre-trial build have no
+    /// stored date yet, so this starts their 7-day clock rather than locking them
+    /// out immediately.
+    func evaluateTrialStatus() {
+        let defaults = UserDefaults.standard
+        let now = Date()
+        let firstLaunch: Date
+        if let stored = defaults.object(forKey: firstLaunchKey) as? Date {
+            firstLaunch = stored
+        } else {
+            firstLaunch = now
+            defaults.set(now, forKey: firstLaunchKey)
+        }
+        trialActive = Date().timeIntervalSince(firstLaunch) < trialDuration
     }
 
     deinit { transactionListener?.cancel() }
@@ -101,9 +133,21 @@ class PurchaseManager: ObservableObject {
 
     func updateEntitlementStatus() async {
         #if DEBUG
-        // Stay locked when capturing the upgrade/paywall screenshot so it
-        // renders the real locked state, unconditionally unlocked otherwise.
-        isPro = ProcessInfo.processInfo.environment["CN_CAPTURE"] != "upgrade"
+        // Dev convenience: auto-grant Pro in DEBUG so paid content is testable in the
+        // Simulator without a StoreKit configuration file. BUT this must not leak into
+        // the Home or Upgrade screenshots used for the App Store listing — a free-tier
+        // user should see the real locked/unpurchased state there. The previous
+        // `CN_CAPTURE != "upgrade"` check only exempted the upgrade screen; CN_CAPTURE=
+        // "home" (and the CN_SKIP_ONBOARDING home-capture path) fell through to
+        // isPro = true and leaked "already purchased" into Home screenshots too.
+        let env = ProcessInfo.processInfo.environment
+        let capture = env["CN_CAPTURE"]
+        let isHomeCapture = capture == "home" || (capture == nil && env["CN_SKIP_ONBOARDING"] != nil)
+        if capture == "upgrade" || isHomeCapture {
+            isPro = false
+        } else {
+            isPro = true
+        }
         #else
         for await result in Transaction.currentEntitlements {
             switch result {

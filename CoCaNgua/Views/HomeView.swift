@@ -39,7 +39,7 @@ struct HomeView: View {
 
                     VStack(spacing: 12) {
                         Button { startGame() } label: {
-                            Text(L("home.play")).font(.title3.bold()).frame(maxWidth: 260).padding()
+                            Text(L("home.play") + (trialExpired ? " 🔒" : "")).font(.title3.bold()).frame(maxWidth: 260).padding()
                         }
                         .buttonStyle(.borderedProminent).tint(.green)
 
@@ -52,9 +52,15 @@ struct HomeView: View {
                             }
                         }
 
+                        if !purchases.isPro && purchases.trialActive {
+                            Text(String(format: L("home.trialdays"), purchases.trialDaysRemaining))
+                                .font(.caption).foregroundStyle(.white.opacity(0.6))
+                        }
+
                         if !purchases.isPro {
                             Button { showUpgrade = true } label: {
-                                Text(L("home.upgrade")).font(.footnote).foregroundStyle(.yellow)
+                                Text(L(purchases.trialActive ? "home.upgrade" : "home.upgrade.trialended"))
+                                    .font(.footnote).foregroundStyle(.yellow)
                             }
                         }
                     }
@@ -82,10 +88,17 @@ struct HomeView: View {
         }
     }
 
+    /// True once neither Pro nor the trial covers play anymore. Solo vs. AI at Normal
+    /// difficulty was the app's one permanently-free tier; after the 7-day trial ends
+    /// it locks too, same as everything else that was already Pro-only.
+    private var trialExpired: Bool {
+        !purchases.isPro && !purchases.trialActive
+    }
+
     private var modeSection: some View {
         VStack(spacing: 10) {
             Picker(L("home.mode"), selection: $mode) {
-                Text(L("home.mode.solo")).tag(GameSetupMode.solo)
+                Text(L("home.mode.solo") + (trialExpired ? " 🔒" : "")).tag(GameSetupMode.solo)
                 Text(L("home.mode.passAndPlay") + (purchases.isPro ? "" : " 🔒")).tag(GameSetupMode.passAndPlay)
             }
             .pickerStyle(.segmented)
@@ -102,6 +115,10 @@ struct HomeView: View {
                     Button { showUpgrade = true } label: {
                         Text(L("home.mode.passAndPlayLocked")).font(.caption).foregroundStyle(.yellow)
                     }
+                }
+            } else if trialExpired {
+                Button { showUpgrade = true } label: {
+                    Text(L("home.mode.soloLocked")).font(.caption).foregroundStyle(.yellow)
                 }
             }
         }
@@ -132,6 +149,10 @@ struct HomeView: View {
     }
 
     private func startGame() {
+        if trialExpired {
+            showUpgrade = true
+            return
+        }
         if mode == .passAndPlay && !purchases.isPro {
             showUpgrade = true
             return

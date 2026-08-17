@@ -4,6 +4,7 @@
 "home.mode.solo" = "Một Mình vs AI";
 "home.mode.passAndPlay" = "Chơi Chung Máy";
 "home.mode.passAndPlayLocked" = "Mở khóa Chơi Chung Máy →";
+"home.mode.soloLocked" = "Hết dùng thử — mở khóa để tiếp tục đua →";
 "home.players" = "%d Người Chơi";
 "home.difficulty" = "Độ Khó AI";
 "home.difficultyLocked" = "Bản miễn phí: AI luôn ở mức Vừa";
@@ -11,6 +12,8 @@
 "home.rules" = "Luật Đầy Đủ";
 "home.howtoplay" = "Hướng Dẫn";
 "home.upgrade" = "Mở khóa AI Khó, Chơi Chung Máy & hơn thế nữa →";
+"home.upgrade.trialended" = "Hết dùng thử — mở khóa để tiếp tục chơi →";
+"home.trialdays" = "Dùng thử miễn phí — còn %d ngày";
 
 "difficulty.easy" = "Dễ";
 "difficulty.normal" = "Vừa";
@@ -49,6 +52,7 @@
 
 "upgrade.title" = "Cờ Cá Ngựa Pro";
 "upgrade.subtitle" = "Mở khóa trải nghiệm đầy đủ.";
+"upgrade.subtitle.trialended" = "Bản dùng thử 7 ngày đã hết. Mở khóa Cờ Cá Ngựa Pro để tiếp tục chơi.";
 "upgrade.feature.hardAI" = "Độ khó AI Khó cho cả 3 đối thủ máy";
 "upgrade.feature.passAndPlay" = "Chơi Chung Máy — tới 4 người";
 "upgrade.feature.noAds" = "Không quảng cáo, mãi mãi";
