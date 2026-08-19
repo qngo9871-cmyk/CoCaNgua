@@ -9,18 +9,22 @@ neither Fanorona's 1v1 board game nor SamLoc's 4-AI card game — it's a 4-playe
 race, so the Core/ layer (Board/Token/Player/GameModel/AIEngine) is new, purpose-built
 for this ruleset.
 
-**Status: 🟡 READY FOR RESUBMISSION AFTER 2026-08-18, pending Apple's Guideline 5.6 hold.**
-This app was one of 19 apps hit by an account-level "Developer Code of Conduct — Review
-Suspended" flag (near-certainly triggered by submitting ~19 similar template-style apps
-within an 8-day window, 2026-08-01 through 2026-08-08), not a per-app rejection.
-Resubmission is hard-blocked until 2026-08-18. App id `6796833591`. The version originally
-submitted 2026-08-01 was `1.0.0` (id `f0f6f1a1-2e0f-4722-b367-725743a76193`), build
-`6410ad7b-b1f0-4bd3-bec4-ca254a9d5253`, reviewSubmission `be8d1659-eeed-4eb7-9a93-f103c398ce3c`,
-release type automatic (`AFTER_APPROVAL`) — that reviewSubmission/build predate the pass
-below and will need a fresh build attached at resubmission time (out of scope here, no ASC
-calls were made in this pass). **Local marketing version is now `1.0.1` / build `2`** (bumped
-2026-08-09, see review pass below) — bump again if further local changes land before the
-window reopens.
+**Status: 🟢 v1.0.4 SUBMITTED, WAITING_FOR_REVIEW (2026-08-20).** App id `6796833591`.
+This app was one of 19 apps hit by the 2026-08-09 account-level Guideline 5.6 hold (see
+below) — that hold cleared 2026-08-18, and this app carries the trial-lock bypass fix from
+that same day (build 5, see the "New Game bypass" section further down).
+
+**Resubmission mechanics, for reference:** the original `be8d1659-...` reviewSubmission
+(2026-07-31, holding v1.0.0's original build) was still holding the appStoreVersion hostage
+in `UNRESOLVED_ISSUES` state — canceled via `PATCH {"canceled": true}`, polled to `COMPLETE`,
+which freed the version. Separately, a stray draft reviewSubmission (`0359bcc6-...`)
+already existed holding **only** an IAP-type item (`com.quyenngo.cocangua.pro`, ticked in via
+the ASC web UI in some earlier, undocumented session) — the classic orphaned-draft gotcha
+(see `feedback_iap_must_ride_with_first_version_submission` memory). Rather than create a
+competing submission, attached the freed appStoreVersion (bumped in place to **1.0.4**, build
+5 attached) to that same existing draft, then submitted it. Verified post-submit that **both**
+the version and the IAP moved to `WAITING_FOR_REVIEW` together — confirms nothing was left
+behind.
 
 ## 2026-08-18 — 7-day trial, then everything locks (no permanent free tier)
 
