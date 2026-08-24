@@ -102,7 +102,7 @@ struct HomeView: View {
                 Text(L("home.mode.passAndPlay") + (purchases.isPro ? "" : " 🔒")).tag(GameSetupMode.passAndPlay)
             }
             .pickerStyle(.segmented)
-            .frame(maxWidth: 320)
+            .frame(maxWidth: 340)
 
             if mode == .passAndPlay {
                 if purchases.isPro {
