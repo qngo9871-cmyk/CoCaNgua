@@ -9,6 +9,19 @@ neither Fanorona's 1v1 board game nor SamLoc's 4-AI card game — it's a 4-playe
 race, so the Core/ layer (Board/Token/Player/GameModel/AIEngine) is new, purpose-built
 for this ruleset.
 
+**2026-08-24/25 — v1.0.5 (build 6), fixed a real picker-truncation bug, SUBMITTED.**
+Found via a portfolio-wide code-level sweep for 3 known bug signatures (see
+`reference_compliance_gate_tool` memory). `Views/HomeView.swift`'s mode picker
+(Solo vs Pass & Play) falls back to `!purchases.trialActive` once the trial expires,
+so both segments can show a lock icon simultaneously — `maxWidth` was 320, widened
+to 340. v1.0.4 was already `READY_FOR_SALE` (live), so there was nothing to cancel —
+this shipped as a normal new-version update: created appStoreVersion
+`45397577-b051-40cb-af99-a7517d4124ab` (versionString 1.0.5, localizations copied
+forward automatically), archived/exported/uploaded (Delivery UUID
+`556805af-6735-40a8-895a-46afdd3440f3`, processed `VALID`), attached the build, set
+`whatsNew` (both locales), created reviewSubmission `b631d7df-b09d-4376-8078-8981bdb6b5b5`
+and submitted. **Verified: WAITING_FOR_REVIEW as v1.0.5.**
+
 **Status: 🟢 v1.0.4 SUBMITTED, WAITING_FOR_REVIEW (2026-08-20).** App id `6796833591`.
 This app was one of 19 apps hit by the 2026-08-09 account-level Guideline 5.6 hold (see
 below) — that hold cleared 2026-08-18, and this app carries the trial-lock bypass fix from
