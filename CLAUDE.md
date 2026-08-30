@@ -1,3 +1,11 @@
+**2026-08-30 — v1.0.6 (build 7), language-switch bug fix, SUBMITTED, WAITING_FOR_REVIEW.**
+Portfolio-wide sweep found the language Picker bound directly to `$loc.language`,
+bypassing `setLanguage(_:)`, so the string-lookup `bundle` never updated on switch (see
+memory `feedback_localization_picker_direct_binding_bug` — same bug fixed in 16 apps same
+day, root-caused via on-device testing on SamLoc). Fixed by making `bundle` computed from
+`language`. Archived/uploaded, attached to a fresh appStoreVersion, `whatsNew` set (en+vi),
+review notes appended. **Verified: WAITING_FOR_REVIEW as v1.0.6.**
+
 # Cờ Cá Ngựa — Vietnamese Horse Race Board Game
 
 Native SwiftUI iOS app for Cờ Cá Ngựa, the traditional Vietnamese 4-player race/dice
