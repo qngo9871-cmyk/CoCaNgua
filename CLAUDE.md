@@ -1,3 +1,15 @@
+**2026-09-04 — Competitor check: this category has no paid IAP at all; leaving price
+as-is and watching.** Pulled live App Store listings for direct Vietnam board-game
+competitors ("Cờ cá ngựa - Co ca ngua", ZingPlay's version, others). **None of them have
+any in-app purchases** — they're pure free/ad-supported, unlike the Sâm Lốc/Tiến Lên
+card-game category where paid unlocks (29,000–59,000đ) are normal (see
+`~/Projects/SamLoc/CLAUDE.md`). So the 45,000 VND fix below is priced fairly *within a
+category where paying anything at all is the outlier*, not the norm — price alone may
+not fix conversion here. Decision (user, 2026-09-04): leave the price as-is, just watch
+the data for now rather than touch pricing further. If conversion stays at zero after a
+few weeks, the real lever is likely a monetization-model change (ad-supported instead of
+paid unlock), not another price cut — bigger product decision, not yet scoped.
+
 **2026-09-04 — Vietnam IAP price cut to 45,000 VND (manual override).** Apple's
 automatic territory pricing had `cocangua.pro` at 99,000 VND for Vietnam (~$3.90
 USD-equivalent, actually *above* the $2.99 US price) — discovered while investigating
