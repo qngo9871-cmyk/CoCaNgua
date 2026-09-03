@@ -1,3 +1,12 @@
+**2026-09-04 — Vietnam IAP price cut to 45,000 VND (manual override).** Apple's
+automatic territory pricing had `cocangua.pro` at 99,000 VND for Vietnam (~$3.90
+USD-equivalent, actually *above* the $2.99 US price) — discovered while investigating
+Sam Loc's 0-purchase problem (see `~/Projects/SamLoc/CLAUDE.md` and memory
+`project_samloc_...`). Since ~91% of Sam Loc's downloads are Vietnam-based and the same
+auto-pricing applies portfolio-wide, added a manual VNM price override here too (US
+price stays $2.99, only Vietnam changes). No app review needed — pricing is metadata,
+applies instantly. Worth watching VN conversion over the next few weeks.
+
 **2026-08-30 — v1.0.6 (build 7), language-switch bug fix, SUBMITTED, WAITING_FOR_REVIEW.**
 Portfolio-wide sweep found the language Picker bound directly to `$loc.language`,
 bypassing `setLanguage(_:)`, so the string-lookup `bundle` never updated on switch (see
